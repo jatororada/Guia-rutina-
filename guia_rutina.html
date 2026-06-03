@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Guía de Rutina</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Archivo:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #0d0f12;
+    --surface: #161a1f;
+    --surface-2: #1d2228;
+    --line: #2a3038;
+    --accent: #f5a623;
+    --accent-soft: #f5a62322;
+    --text: #f0f2f5;
+    --muted: #8a93a0;
+    --green: #34c759;
+    --red: #ff5a52;
+    --blue: #4a9eff;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Archivo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding-bottom: 90px;
+    background-image: radial-gradient(circle at 20% 0%, #1a1d2410 0%, transparent 50%);
+  }
+
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 16px; }
+
+  /* HEADER */
+  header {
+    padding: 28px 16px 20px;
+    background: linear-gradient(160deg, #1a1f26 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--line);
+  }
+  header .wrap { padding: 0 0; }
+  .eyebrow {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 6px;
+  }
+  h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 28px; font-weight: 800; line-height: 1.15; letter-spacing: -0.5px;
+  }
+  .profile {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+  }
+  .chip {
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 100px; padding: 5px 12px; font-size: 12px; color: var(--muted);
+  }
+  .chip b { color: var(--text); font-weight: 600; }
+
+  /* TAB NAV */
+  .tabs {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(13,15,18,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    display: flex; gap: 6px; padding: 10px 16px; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0;
+    font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 9px 16px; border-radius: 100px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--muted); cursor: pointer;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .tab.active { background: var(--accent); color: #111; border-color: var(--accent); }
+
+  /* PANELS */
+  .panel { display: none; padding-top: 24px; }
+  .panel.active { display: block; animation: fade 0.35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px);} to {opacity:1; transform:none;} }
+
+  .day-head { margin-bottom: 18px; }
+  .day-tag {
+    font-family: 'Sora', sans-serif; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted); font-weight: 700;
+  }
+  .day-title {
+    font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800; margin-top: 2px;
+  }
+
+  /* EXERCISE CARD */
+  .ex {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .ex.open { border-color: var(--accent); }
+  .ex-head {
+    display: flex; align-items: center; gap: 12px; padding: 16px;
+    cursor: pointer; user-select: none;
+  }
+  .ex-num {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px;
+    background: var(--accent-soft); color: var(--accent);
+    font-family: 'Sora', sans-serif; font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ex-info { flex: 1; min-width: 0; }
+  .ex-name {
+    font-family: 'Sora', sans-serif; font-weight: 600; font-size: 15.5px; line-height: 1.3;
+  }
+  .ex-meta { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .ex-arrow {
+    flex-shrink: 0; color: var(--muted); transition: transform 0.3s; font-size: 18px;
+  }
+  .ex.open .ex-arrow { transform: rotate(90deg); color: var(--accent); }
+
+  .ex-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  .ex-body-inner { padding: 0 16px 18px; }
+
+  .sec { margin-top: 16px; }
+  .sec-title {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .sec-title .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .sec p { font-size: 14px; color: #d4d9df; margin-bottom: 6px; }
+  .sec ul { list-style: none; }
+  .sec li {
+    font-size: 14px; color: #d4d9df; padding-left: 18px; position: relative; margin-bottom: 6px;
+  }
+  .sec li::before {
+    content: ''; position: absolute; left: 2px; top: 9px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--muted);
+  }
+  .sec li b, .sec p b { color: #fff; font-weight: 600; }
+
+  .sec.danger .sec-title { color: var(--red); }
+  .sec.danger .sec-title .dot { background: var(--red); }
+  .sec.tip .sec-title { color: var(--green); }
+  .sec.tip .sec-title .dot { background: var(--green); }
+
+  .breath {
+    background: var(--surface-2); border-radius: 10px; padding: 12px 14px;
+    display: flex; gap: 16px; margin-top: 4px; flex-wrap: wrap;
+  }
+  .breath div { font-size: 13px; }
+  .breath .lbl { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* CALLOUT */
+  .note {
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;
+    font-size: 13.5px; color: #e8d9bf;
+  }
+  .note b { color: var(--accent); }
+
+  .dup-flag {
+    display: inline-block; background: var(--red); color: #fff;
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px;
+    letter-spacing: 0.5px; margin-left: 6px; vertical-align: middle;
+  }
+
+  /* ANALYSIS */
+  .a-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
+  }
+  .a-card h3 {
+    font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 700;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
+  }
+  .a-card h3 .ic {
+    width: 28px; height: 28px; border-radius: 8px; background: var(--accent-soft);
+    color: var(--accent); display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .a-card p { font-size: 14px; color: #d4d9df; margin-bottom: 8px; }
+  .a-card ul { list-style: none; }
+  .a-card li {
+    font-size: 14px; color: #d4d9df; padding-left: 18px; position: relative; margin-bottom: 7px;
+  }
+  .a-card li::before {
+    content: ''; position: absolute; left: 2px; top: 9px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+  }
+  .a-card b { color: #fff; font-weight: 600; }
+
+  .vol-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .vol-name { width: 90px; flex-shrink: 0; font-size: 13px; }
+  .vol-bar { flex: 1; height: 8px; background: var(--surface-2); border-radius: 100px; overflow: hidden; }
+  .vol-fill { height: 100%; border-radius: 100px; background: var(--accent); }
+  .vol-val { width: 70px; flex-shrink: 0; font-size: 12px; color: var(--muted); text-align: right; }
+
+  .order-step {
+    display: flex; gap: 12px; align-items: flex-start; margin-bottom: 8px;
+    font-size: 14px; color: #d4d9df;
+  }
+  .order-step .n {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 6px;
+    background: var(--surface-2); color: var(--accent); font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; margin-top: 1px;
+  }
+
+  .disclaimer {
+    font-size: 12px; color: var(--muted); margin-top: 20px; padding: 14px;
+    border: 1px dashed var(--line); border-radius: 10px; line-height: 1.5;
+  }
+
+  footer { text-align: center; padding: 24px 16px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Guía Personal de Entrenamiento</div>
+    <h1>Mi Rutina de Gimnasio</h1>
+    <div class="profile">
+      <span class="chip">158 cm</span>
+      <span class="chip">48 kg</span>
+      <span class="chip">25 años</span>
+      <span class="chip"><b>Meta:</b> recomposición + tren inferior</span>
+      <span class="chip"><b>Nivel:</b> principiante</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="a">Día A · Push</button>
+  <button class="tab" data-tab="b">Día B · Piernas</button>
+  <button class="tab" data-tab="c">Día C · Pull</button>
+  <button class="tab" data-tab="d">Día D · Piernas</button>
+  <button class="tab" data-tab="analisis">📊 Análisis</button>
+</nav>
+
+<main class="wrap">
+
+  <!-- ===================== DÍA A ===================== -->
+  <section class="panel active" id="panel-a">
+    <div class="day-head">
+      <div class="day-tag">Entrenamiento A</div>
+      <div class="day-title">Pectorales · Hombro · Tríceps · Abdomen</div>
+    </div>
+    <div class="note"><b>Antes de empezar:</b> llevas +4 meses sin entrenar. Las primeras 2–3 semanas la prioridad es <b>técnica</b>, no peso. Usa cargas ligeras y deja siempre 3–4 reps en reserva. Previene lesiones y dolor excesivo.</div>
+
+    <div id="list-a"></div>
+  </section>
+
+  <!-- ===================== DÍA B ===================== -->
+  <section class="panel" id="panel-b">
+    <div class="day-head">
+      <div class="day-tag">Entrenamiento B</div>
+      <div class="day-title">Piernas · énfasis Glúteos</div>
+    </div>
+    <div class="note"><b>Tu día clave</b> para el objetivo de tren inferior. Descansa <b>1.5–2 min</b> en los compuestos pesados (leg press, hip thrust) para progresar mejor.</div>
+    <div id="list-b"></div>
+  </section>
+
+  <!-- ===================== DÍA C ===================== -->
+  <section class="panel" id="panel-c">
+    <div class="day-head">
+      <div class="day-tag">Entrenamiento C</div>
+      <div class="day-title">Abdomen · Dorsal · Bíceps</div>
+    </div>
+    <div id="list-c"></div>
+  </section>
+
+  <!-- ===================== DÍA D ===================== -->
+  <section class="panel" id="panel-d">
+    <div class="day-head">
+      <div class="day-tag">Entrenamiento D</div>
+      <div class="day-title">Piernas · énfasis Cuádriceps</div>
+    </div>
+    <div id="list-d"></div>
+  </section>
+
+  <!-- ===================== ANÁLISIS ===================== -->
+  <section class="panel" id="panel-analisis">
+    <div class="day-head">
+      <div class="day-tag">Evaluación profesional</div>
+      <div class="day-title">Análisis de la rutina completa</div>
+    </div>
+
+    <div class="a-card">
+      <h3><span class="ic">⚖️</span>¿Está equilibrada?</h3>
+      <p>Sí, en general es una rutina <b>decente y alineada con tu objetivo</b>: 2 de 4 días son de piernas, con énfasis en glúteo y cuádriceps. A nivel semanal el empuje (Día A) y la tracción (Día C) están bien balanceados.</p>
+    </div>
+
+    <div class="a-card">
+      <h3><span class="ic">🔍</span>Músculos poco trabajados / sobrecargados</h3>
+      <ul>
+        <li><b>Poco trabajado — Gemelos:</b> no hay ejercicio directo de pantorrilla. Considera añadir elevaciones de talón en B o D.</li>
+        <li><b>Poco trabajado — Hombro posterior:</b> apenas directo, pero lo cubren remo y jalón. No urgente.</li>
+        <li><b>Sobrecargado — Tríceps (Día A):</b> el chest press ya trabaja tríceps + DOS ejercicios de tríceps idénticos = demasiado volumen para un músculo pequeño.</li>
+      </ul>
+    </div>
+
+    <div class="a-card">
+      <h3><span class="ic">⚠️</span>Ejercicio redundante detectado</h3>
+      <p><b>Día A:</b> "Tríceps Press Agarre Cerrado" aparece <b>dos veces seguidas</b> idéntico (3×15-20). Es casi seguro un error. Quédate con uno solo (3-4 series) o reemplaza el segundo por extensiones de tríceps en polea.</p>
+      <p>El hip thrust y el femoral se repiten en B y D, pero en días distintos: eso es <b>frecuencia correcta</b> (2x/semana), no redundancia.</p>
+    </div>
+
+    <div class="a-card">
+      <h3><span class="ic">🔧</span>Sugerencias de mejora</h3>
+      <ul>
+        <li>Elimina el tríceps press duplicado del Día A.</li>
+        <li>Añade gemelo (calf raise) para pierna completa.</li>
+        <li>Usa el cardio solo como calentamiento (10 min); la recomposición se logra más con la dieta.</li>
+        <li>Sube el descanso a 1.5–2 min en compuestos pesados.</li>
+        <li>Progresa peso/reps semana a semana en hip thrust, leg press, sentadilla y glúteo en máquina: es lo que más mueve la aguja.</li>
+      </ul>
+    </div>
+
+    <div class="a-card">
+      <h3><span class="ic">📋</span>Orden más eficiente</h3>
+      <p style="color:var(--muted);font-size:13px;">Regla: compuestos pesados primero, aislamientos y abdomen al final.</p>
+      <p style="margin-top:10px;"><b>Día A</b></p>
+      <div class="order-step"><span class="n">1</span>Cardio (calentamiento)</div>
+      <div class="order-step"><span class="n">2</span>Chest Press</div>
+      <div class="order-step"><span class="n">3</span>Press de Hombro</div>
+      <div class="order-step"><span class="n">4</span>Elevaciones Laterales</div>
+      <div class="order-step"><span class="n">5</span>Tríceps Press (uno solo)</div>
+      <div class="order-step"><span class="n">6</span>Abdomen en máquina → flexión de cadera</div>
+      <p style="margin-top:14px;"><b>Día B</b></p>
+      <div class="order-step"><span class="n">1</span>Cardio</div>
+      <div class="order-step"><span class="n">2</span>Leg Press</div>
+      <div class="order-step"><span class="n">3</span>Hip Thrust (súbelo por tu objetivo)</div>
+      <div class="order-step"><span class="n">4</span>Glúteo en Máquina</div>
+      <div class="order-step"><span class="n">5</span>Femoral Acostado</div>
+      <div class="order-step"><span class="n">6</span>Abductor</div>
+      <p style="margin-top:14px;"><b>Día C</b></p>
+      <div class="order-step"><span class="n">1</span>Cardio</div>
+      <div class="order-step"><span class="n">2</span>Jalón al Pecho</div>
+      <div class="order-step"><span class="n">3</span>Remo Agarre Neutro</div>
+      <div class="order-step"><span class="n">4</span>Pull Over</div>
+      <div class="order-step"><span class="n">5</span>Curl con Mancuernas</div>
+      <div class="order-step"><span class="n">6</span>Abdomen (bicicleta → crunch → plancha)</div>
+      <p style="margin-top:14px;"><b>Día D</b></p>
+      <div class="order-step"><span class="n">1</span>Cardio</div>
+      <div class="order-step"><span class="n">2</span>Sentadilla en Smith</div>
+      <div class="order-step"><span class="n">3</span>Hip Thrust</div>
+      <div class="order-step"><span class="n">4</span>Extensión de Pierna</div>
+      <div class="order-step"><span class="n">5</span>Máquina de Femoral</div>
+      <div class="order-step"><span class="n">6</span>Aductora</div>
+    </div>
+
+    <div class="a-card">
+      <h3><span class="ic">📊</span>Volumen semanal por grupo</h3>
+      <div class="vol-row"><span class="vol-name">Glúteo</span><div class="vol-bar"><div class="vol-fill" style="width:95%"></div></div><span class="vol-val">12-15 ✓✓</span></div>
+      <div class="vol-row"><span class="vol-name">Cuádriceps</span><div class="vol-bar"><div class="vol-fill" style="width:75%"></div></div><span class="vol-val">9-12 ✓</span></div>
+      <div class="vol-row"><span class="vol-name">Espalda</span><div class="vol-bar"><div class="vol-fill" style="width:70%"></div></div><span class="vol-val">10-11 ✓</span></div>
+      <div class="vol-row"><span class="vol-name">Hombro</span><div class="vol-bar"><div class="vol-fill" style="width:55%"></div></div><span class="vol-val">~8 ✓</span></div>
+      <div class="vol-row"><span class="vol-name">Femoral</span><div class="vol-bar"><div class="vol-fill" style="width:45%"></div></div><span class="vol-val">~6 ✓</span></div>
+      <div class="vol-row"><span class="vol-name">Tríceps</span><div class="vol-bar"><div class="vol-fill" style="width:60%;background:var(--red)"></div></div><span class="vol-val">6-8 ↓</span></div>
+      <div class="vol-row"><span class="vol-name">Pecho</span><div class="vol-bar"><div class="vol-fill" style="width:30%"></div></div><span class="vol-val">~4</span></div>
+      <div class="vol-row"><span class="vol-name">Bíceps</span><div class="vol-bar"><div class="vol-fill" style="width:30%"></div></div><span class="vol-val">~4</span></div>
+      <p style="margin-top:12px;font-size:13px;color:var(--muted);">El tríceps en rojo está algo alto por el duplicado; ideal ~4-6 series.</p>
+    </div>
+
+    <div class="a-card">
+      <h3><span class="ic">🎯</span>¿Adecuado para qué objetivo?</h3>
+      <ul>
+        <li><b>Hipertrofia:</b> SÍ. Volumen y rangos de 8-15 reps ideales, sobre todo en tren inferior. Es tu estímulo principal para recomposición.</li>
+        <li><b>Fuerza pura:</b> PARCIAL. La fuerza máxima usa 3-6 reps con más peso y descanso. Tu rutina es más de hipertrofia. Como principiante igual ganarás fuerza inicial.</li>
+        <li><b>Resistencia muscular:</b> SÍ, sobre todo en los ejercicios de 15-20 reps y el abdomen.</li>
+      </ul>
+    </div>
+
+    <div class="a-card">
+      <h3><span class="ic">💡</span>Para ti específicamente</h3>
+      <ul>
+        <li><b>Semanas 1-3:</b> peso ligero, técnica perfecta, sentir el músculo. Tendrás agujetas: es normal.</li>
+        <li><b>Progresión:</b> si completas todas las reps con buena técnica y sobran 1-2, sube un poco el peso. La sobrecarga progresiva genera el cambio.</li>
+        <li><b>Nutrición:</b> para crecer glúteo apunta a ~80-95 g de proteína/día y come al menos en mantenimiento, no en déficit agresivo. <i>No soy nutricionista; consulta a un profesional para tu plan.</i></li>
+        <li><b>Descanso:</b> el músculo crece descansando. Duerme bien y deja 48 h entre el mismo grupo.</li>
+        <li><b>Constancia &gt; perfección:</b> 4 días sostenidos durante meses es lo que da resultados.</li>
+      </ul>
+    </div>
+
+    <div class="disclaimer">
+      Esta guía es educativa y general. No reemplaza la valoración presencial de un entrenador o fisioterapeuta, sobre todo si tienes lesiones previas. Si un ejercicio te causa dolor articular (no muscular), detente y consulta.
+    </div>
+  </section>
+
+</main>
+
+<footer>Tu guía personalizada · toca cada ejercicio para ver el detalle completo</footer>
+
+<script>
+// ---------- DATA ----------
+const data = {
+  a: [
+    {n:'C', name:'Cardio – Caminadora', meta:'10 min · calentamiento',
+      muscles:{main:'Sistema cardiovascular', sec:'Piernas (ligero)', benefit:'Calentamiento general: sube temperatura, lubrica articulaciones, prepara el corazón. No lo saltes.'},
+      exec:['Ritmo cómodo pero activo (puedes hablar con esfuerzo ligero).','Inclinación 2–4% activa más el glúteo.','Postura erguida, no te cuelgues de las barras.'],
+      breath:{in:'Natural', out:'Por nariz/boca'},
+      errors:['Usarlo como quema y dejarlo antes de pesas (mejor al final si es para eso).'],
+      tips:['10 min basta como calentamiento.'],
+      safety:['Sin riesgo relevante a ritmo moderado.']},
+    {n:'1', name:'Chest Press', meta:'4× 8 a 10 · máquina',
+      muscles:{main:'Pectoral mayor', sec:'Deltoides anterior, tríceps', benefit:'Empuje horizontal seguro para principiantes; fuerza de pecho sin estabilizar como con mancuernas.'},
+      machine:['<b>Asiento:</b> agarres a la altura de la mitad del pecho, no de los hombros.','<b>Respaldo:</b> firme; en inicio los codos no deben ir más atrás de la línea del torso.','<b>Pies:</b> planos en suelo/plataforma.','<b>Error de ajuste:</b> asiento muy bajo fuerza el hombro.'],
+      start:['Pies firmes al ancho de caderas, rodillas ~90°.','Glúteo al fondo del asiento, espalda apoyada.','Hombros abajo y atrás, pecho ligeramente sacado.','Agarre con muñecas rectas, palmas al frente.'],
+      exec:['Empuja los mangos al frente controladamente.','<b>Subida:</b> exhala, extiende sin bloquear los codos del todo.','<b>Bajada:</b> inhala, regresa lento hasta que los codos lleguen a la línea del torso.','Ritmo: 1-2s empujar, 2-3s regresar. El control en la bajada hace crecer el músculo.'],
+      breath:{in:'Al regresar', out:'Al empujar'},
+      errors:['Bloquear los codos con fuerza.','Subir los hombros a las orejas.','Arquear y despegar la espalda baja.','Muñecas dobladas.'],
+      tips:['Imagina juntar los codos al centro al empujar.','Enfoca la atención en el pecho, no en los brazos.','Si lo sientes solo en tríceps/hombro, baja el asiento y "guarda" los hombros.'],
+      safety:['Riesgo: hombro por mal ajuste de altura.','Detente ante pinchazo en hombro o muñeca.']},
+    {n:'2', name:'Press de Hombro Abierto', meta:'4× 12 a 15 · mancuernas',
+      muscles:{main:'Deltoides (frontal y medio)', sec:'Tríceps, trapecio, core', benefit:'Hombros redondeados que mejoran postura y aspecto del torso.'},
+      start:['Pies al ancho de caderas, rodillas algo flexionadas.','Cadera neutra, glúteo y abdomen activos, espalda recta.','Mancuernas a la altura de los hombros, palmas al frente o algo giradas.','Cabeza neutra, mirada al frente.'],
+      exec:['Empuja en diagonal hasta casi juntar arriba.','<b>Subida:</b> exhala, sube sin bloquear codos.','<b>Bajada:</b> inhala, baja lento hasta la altura de orejas/hombros.','Ritmo: 1-2s subir, 2-3s bajar.'],
+      breath:{in:'Al bajar', out:'Al subir'},
+      errors:['Arquear mucho la espalda baja (peligroso).','Subir los hombros a las orejas.','Demasiado peso y rebotar el cuerpo.','Codos muy abiertos atrás.'],
+      tips:['Empieza con 2-4 kg por mano: el hombro es delicado.','Si te cuesta la postura, hazlo sentada con respaldo.','Siente que el hombro "empuja el techo".'],
+      safety:['Riesgo: lumbar (por arquear) y hombro.','Detente ante dolor lumbar o pinchazo de hombro.']},
+    {n:'3', name:'Elevaciones Laterales (sentada)', meta:'4× 8 a 10 · mancuernas',
+      muscles:{main:'Deltoides medio (lateral)', sec:'Deltoides posterior, trapecio', benefit:'Aísla la cabeza lateral del hombro; da forma y amplitud. Muy bueno para estética.'},
+      start:['Sentada, espalda recta, pies apoyados.','Mancuernas a los lados, codo "suave" (ligera flexión).','Palmas hacia el cuerpo, hombros lejos de las orejas.'],
+      exec:['Eleva hacia los lados llevando los codos afuera.','<b>Subida:</b> exhala, sube hasta la altura de los hombros (forma de T), no más.','Lidera con el <b>codo</b>, no con la mano.','<b>Bajada:</b> inhala, muy lento y controlado.'],
+      breath:{in:'Al bajar', out:'Al subir'},
+      errors:['Subir por encima de los hombros (mete trapecio).','Balanceo del cuerpo.','Encoger hombros.','Peso excesivo (usa 1.5-4 kg).'],
+      tips:['Imagina vaciar una botella al subir (meñique algo más alto).','Pausa medio segundo arriba.','Si suben los hombros, baja el peso.'],
+      safety:['Riesgo: pinzamiento de hombro.','Detente ante "click" doloroso.']},
+    {n:'53', name:'Tríceps Press Agarre Cerrado', meta:'3× 15 a 20 · máquina', dup:true,
+      muscles:{main:'Tríceps', sec:'Pecho y hombro (ligero)', benefit:'Tonifica la parte de atrás del brazo. Buen empuje para principiantes.'},
+      machine:['<b>Asiento:</b> mangos a la altura del pecho bajo/abdomen alto.','<b>Respaldo:</b> firme contra la espalda.','<b>Pies:</b> planos en el suelo.'],
+      start:['Espalda apoyada, hombros abajo y atrás.','Codos pegados al costado (clave del agarre cerrado).','Agarre estrecho, muñecas neutras.'],
+      exec:['Empuja extendiendo los codos hacia abajo/adelante.','<b>Extensión:</b> exhala, estira casi del todo sin bloquear.','<b>Regreso:</b> inhala, vuelve lento hasta estirar el tríceps.','Mantén los codos pegados al cuerpo todo el tiempo.'],
+      breath:{in:'Al regresar', out:'Al extender'},
+      errors:['Abrir los codos (pasa el trabajo al pecho).','No completar la extensión.','Mover los hombros adelante.'],
+      tips:['Aprieta el tríceps medio segundo al final.','Piensa "estiro el codo".','⚠️ Este ejercicio aparece duplicado: quédate con uno solo.'],
+      safety:['Riesgo: codo y muñeca.','Detente ante dolor articular.']},
+    {n:'40', name:'Abdomen Flexión de Columna en Máquina', meta:'3× 8 a 10 · máquina',
+      muscles:{main:'Recto abdominal', sec:'Oblicuos (ligero)', benefit:'Permite cargar peso al abdomen de forma controlada.'},
+      machine:['<b>Asiento:</b> apoyo del pecho sobre la parte alta del pecho/hombros.','<b>Pies:</b> bajo los rodillos si los tiene.','Pivote de la máquina a la altura del abdomen medio.'],
+      start:['Sentada, espalda en el respaldo, cadera fija.','Agarra los mangos o apoya el pecho según el modelo.'],
+      exec:['Flexiona el tronco "enrollando" la columna (costillas hacia la cadera).','<b>Contracción:</b> exhala al flexionar.','<b>Regreso:</b> inhala, vuelve lento sin soltar tensión.','El movimiento es de columna (encorvar), NO de cadera.'],
+      breath:{in:'Al regresar', out:'Al contraer (fuerte)'},
+      errors:['Tirar con brazos/cuello.','Demasiado peso, mover desde la cadera.','No exhalar.'],
+      tips:['Acerca el ombligo a la columna al encorvar.','Peso moderado: el abdomen responde a la conexión.'],
+      safety:['Riesgo: cuello.','Detente si sientes la lumbar.']},
+    {n:'+', name:'Abdominal con Flexión de Cadera al Pecho', meta:'3× 12 a 15 · suelo/banco',
+      muscles:{main:'Recto abdominal (porción baja)', sec:'Flexores de cadera, oblicuos', benefit:'Trabaja el abdomen inferior, zona difícil de activar.'},
+      start:['Boca arriba o en el borde de un banco.','Manos a los lados para estabilizar.','Lumbar pegada al suelo (clave).'],
+      exec:['Lleva las rodillas al pecho flexionando la cadera y enrollando la pelvis.','<b>Contracción:</b> exhala al acercar.','<b>Regreso:</b> inhala, baja lento sin tocar el suelo.'],
+      breath:{in:'Al bajar', out:'Al subir las rodillas'},
+      errors:['Despegar la lumbar del suelo.','Impulso de las piernas.','Tirar del cuello.'],
+      tips:['Enrolla la pelvis (mete el coxis) para más abdomen bajo.','Si molesta la lumbar, reduce el rango.'],
+      safety:['Detente si sientes la espalda baja.']}
+  ],
+  b: [
+    {n:'C', name:'Cardio – Caminadora', meta:'10 min · calentamiento',
+      muscles:{main:'Sistema cardiovascular', sec:'Piernas (ligero)', benefit:'Calentamiento general antes de las piernas.'},
+      exec:['Ritmo activo, postura erguida.','Inclinación ligera activa glúteo.'],
+      breath:{in:'Natural', out:'Rítmica'},
+      errors:['Saltarlo en día de piernas (importante calentar rodillas y cadera).'],
+      tips:['Buen momento para activar glúteo con inclinación.'],
+      safety:['Sin riesgo a ritmo moderado.']},
+    {n:'01', name:'Leg Press', meta:'3× 12 a 15 · máquina',
+      muscles:{main:'Cuádriceps y glúteo mayor', sec:'Isquiotibiales, gemelos', benefit:'Empuje de piernas fundamental, muy seguro (espalda apoyada). Excelente para piernas y glúteo.'},
+      machine:['<b>Respaldo:</b> distancia tal que en inicio las rodillas queden ~90° sin enrollar la cadera.','La espalda baja y el glúteo pegados al respaldo siempre.','<b>Error:</b> respaldo muy cerca hace que la cadera se despegue abajo (riesgo lumbar).'],
+      start:['Pies en plataforma al ancho de caderas (más alto y ancho = más glúteo).','Rodillas alineadas con la punta de los pies.','Glúteo y espalda pegados al asiento.','Manos en los agarres laterales.'],
+      exec:['Quita los seguros, piernas casi extendidas (sin bloquear).','<b>Bajada:</b> inhala, baja hasta ~90° o un poco más.','<b>Subida:</b> exhala, empuja por los talones hasta casi extender, sin bloquear.','Ritmo: 2-3s bajar, 1-2s empujar.'],
+      breath:{in:'Al bajar', out:'Al empujar'},
+      errors:['Bloquear las rodillas arriba.','Bajar tanto que la cadera se enrolla y la lumbar se despega.','Rodillas hacia adentro.','Empujar con la punta en vez del talón.'],
+      tips:['Más glúteo: pies altos y anchos, empuja con talones.','Más cuádriceps: pies bajos.','Aprieta el glúteo al final de cada empuje.'],
+      safety:['Riesgo: lumbar (enrollar cadera) y rodilla (bloquear).','Detente si la cadera se levanta del asiento.']},
+    {n:'06', name:'Glúteo en Máquina (kickback)', meta:'3× 12 a 15 · máquina',
+      muscles:{main:'Glúteo mayor', sec:'Isquiotibiales, glúteo medio', benefit:'Aísla el glúteo de forma directa. Ideal para tu objetivo.'},
+      machine:['<b>Apoyo de torso:</b> pecho cómodo sobre la almohadilla, cadera alineada con el eje.','<b>Apoyo de pie:</b> sobre la plataforma/rodillo según el modelo.','Pierna que trabaja parte con la rodilla bajo la cadera.'],
+      start:['Torso apoyado, algo inclinada al frente.','Manos en agarres, cadera neutra, abdomen activo.'],
+      exec:['Empuja la plataforma atrás extendiendo la cadera.','<b>Empuje:</b> exhala y aprieta el glúteo al extender.','<b>Regreso:</b> inhala, vuelve sin soltar la tensión.','El movimiento viene de la cadera, no de arquear la espalda.'],
+      breath:{in:'Al volver', out:'Al empujar atrás'},
+      errors:['Arquear la espalda en vez de extender la cadera.','Rango excesivo.','Impulso.'],
+      tips:['Pausa y aprieta el glúteo medio segundo arriba.','Piensa que el talón "empuja la pared de atrás".'],
+      safety:['Detente si sientes la lumbar en vez del glúteo.']},
+    {n:'10', name:'Femoral Acostado en Máquina', meta:'3× 12 a 15 · máquina',
+      muscles:{main:'Isquiotibiales (femoral)', sec:'Gemelos, glúteo (ligero)', benefit:'Equilibra la pierna (parte trasera) y protege la rodilla.'},
+      machine:['<b>Rodillo:</b> justo sobre el talón / parte baja de la pantorrilla.','<b>Eje:</b> rodillas alineadas con el pivote (al borde del banco).','La pelvis pegada al banco.','<b>Error:</b> rodillo muy alto reduce la eficacia.'],
+      start:['Boca abajo, pelvis pegada al banco.','Piernas extendidas, rodillo sobre los talones.','Cadera presionando el banco.'],
+      exec:['Flexiona las rodillas llevando los talones a los glúteos.','<b>Flexión:</b> exhala, curva hasta tu rango.','<b>Regreso:</b> inhala, baja lento sin soltar de golpe.','La cadera NO se despega del banco.'],
+      breath:{in:'Al regresar', out:'Al flexionar'},
+      errors:['Levantar la cadera del banco.','Soltar de golpe en la bajada.','Rodillo mal posicionado.'],
+      tips:['Aprieta el femoral arriba.','Si la cadera se levanta, baja el peso.'],
+      safety:['Detente ante calambre fuerte o molestia lumbar.']},
+    {n:'+', name:'Elevación de Cadera / Hip Thrust', meta:'3× 12 a 15 · banco o máquina',
+      muscles:{main:'Glúteo mayor', sec:'Isquiotibiales, core', benefit:'El MEJOR ejercicio para construir y dar forma al glúteo. Pieza clave de tu objetivo.'},
+      machine:['Si es máquina: almohadilla sobre el hueso de la cadera (pliegue), no el abdomen.','Si es con banco: apoya la parte baja de los omóplatos en el borde.'],
+      start:['Espalda alta apoyada.','Pies al ancho de caderas, talones bajo las rodillas (espinillas verticales arriba).','Barbilla algo metida, mirada al frente.'],
+      exec:['Empuja por los talones elevando la cadera.','<b>Subida:</b> exhala hasta que torso y muslos formen línea recta, apretando fuerte el glúteo.','<b>Bajada:</b> inhala, baja lento.','Pausa arriba 1-2s.'],
+      breath:{in:'Al bajar', out:'Al subir'},
+      errors:['Hiperextender la lumbar en vez de apretar el glúteo (muy común).','Talones muy lejos (femoral) o muy cerca (cuádriceps).','Mirar hacia atrás subiendo la barbilla.'],
+      tips:['Pausa 1-2s arriba apretando: marca enorme diferencia.','Mete la barbilla para que trabaje la cadera, no la espalda.','Piensa "aprieto glúteos para subir", no "arqueo la espalda".'],
+      safety:['Riesgo: lumbar si hiperextiendes.','Detente si sientes la espalda baja.']},
+    {n:'04', name:'Abductor (apertura de piernas)', meta:'3× 12 a 15 · máquina',
+      muscles:{main:'Glúteo medio y menor', sec:'Glúteo mayor (fibras superiores)', benefit:'Da forma redonda y "tapa" lateral al glúteo. Importante para tu objetivo y estabilidad.'},
+      machine:['Espalda apoyada.','Almohadillas contra la cara externa de rodillas/muslos.','Regula la apertura inicial: no empieces muy abierta.'],
+      start:['Sentada, espalda apoyada.','Rodillas y muslos contra las almohadillas.','Inclínate algo al frente para más glúteo mayor, recta para glúteo medio.'],
+      exec:['Abre las piernas separando las rodillas contra la resistencia.','<b>Apertura:</b> exhala, abre controlado hasta tu rango cómodo.','<b>Cierre:</b> inhala, vuelve lento sin que las placas golpeen.'],
+      breath:{in:'Al cerrar', out:'Al abrir'},
+      errors:['Impulso del torso.','Soltar de golpe al cerrar.','Apertura excesiva.'],
+      tips:['Inclinarte algo al frente activa más glúteo.','Pausa y aprieta al final de la apertura.'],
+      safety:['Detente ante pinchazo en la cadera.']}
+  ],
+  c: [
+    {n:'C', name:'Cardio – Caminadora', meta:'10 min · calentamiento',
+      muscles:{main:'Sistema cardiovascular', sec:'Piernas (ligero)', benefit:'Calentamiento general.'},
+      exec:['Ritmo activo, postura erguida.'],
+      breath:{in:'Natural', out:'Rítmica'},
+      errors:['Saltarlo.'],
+      tips:['10 min basta.'],
+      safety:['Sin riesgo a ritmo moderado.']},
+    {n:'62', name:'Jalón al Pecho con Polea (Lat Pulldown)', meta:'4× 12 a 15 · máquina',
+      muscles:{main:'Dorsal ancho', sec:'Bíceps, romboides, trapecio medio', benefit:'Tracción vertical fundamental; construye espalda en V y mejora postura.'},
+      machine:['<b>Rodillo de muslos:</b> firme sobre los muslos para no levantarte.','<b>Asiento:</b> pies planos en el suelo.','<b>Agarre:</b> más ancho que los hombros, palmas al frente.'],
+      start:['Muslos bajo el rodillo, pies firmes.','Agarre ancho, palmas al frente.','Pecho algo arriba, espalda recta con leve inclinación atrás (10-20° máx).','Hombros abajo.'],
+      exec:['Inicia bajando hombros y omóplatos antes de doblar codos.','<b>Jalón:</b> exhala, lleva la barra al pecho alto, codos abajo y atrás.','<b>Regreso:</b> inhala, sube controlado hasta casi extender, sintiendo el estiramiento.','Ritmo: 1-2s jalar, 2-3s subir.'],
+      breath:{in:'Al subir', out:'Al jalar'},
+      errors:['Jalar tras la nuca (riesgo de hombro/cuello — siempre al pecho).','Impulso con todo el cuerpo.','Jalar solo con los brazos.','Inclinarse demasiado atrás.'],
+      tips:['Piensa "llevo los codos al bolsillo trasero".','Baja los hombros primero: activa el dorsal, no el bíceps.'],
+      safety:['Riesgo: hombro/cuello si jalas tras la nuca.','Detente ante pinchazo de hombro.']},
+    {n:'30', name:'Remo en Máquina Agarre Neutro', meta:'3× 12 a 15 · máquina',
+      muscles:{main:'Dorsal, romboides, trapecio medio', sec:'Bíceps, deltoides posterior', benefit:'Tracción horizontal que engrosa la espalda y mejora muchísimo la postura.'},
+      machine:['<b>Asiento:</b> mangos a la altura del abdomen/pecho bajo.','<b>Apoyo de pecho:</b> si lo tiene, úsalo para que la espalda no compense.','Pies firmes.'],
+      start:['Sentada, pecho apoyado (si aplica), espalda recta.','Agarre neutro (palmas enfrentadas).','Brazos extendidos al frente, hombros abajo.'],
+      exec:['Inicia juntando los omóplatos (como sosteniendo un lápiz entre ellos).','<b>Tracción:</b> exhala, lleva los mangos al abdomen, codos pegados y atrás.','<b>Regreso:</b> inhala, extiende lento separando los omóplatos al final.'],
+      breath:{in:'Al regresar', out:'Al jalar'},
+      errors:['Jalar solo con los brazos sin juntar omóplatos.','Encoger los hombros.','Impulso (echarse atrás).','Rango incompleto.'],
+      tips:['Pausa apretando la espalda al final.','Piensa en "apretar la espalda", no "tirar con los brazos".'],
+      safety:['Detente si sientes la lumbar.']},
+    {n:'62', name:'Pull Over con Polea Alta', meta:'3× 12 a 15 · polea',
+      muscles:{main:'Dorsal ancho (amplitud)', sec:'Tríceps (cabeza larga), pecho, serrato', benefit:'Aísla el dorsal con poco bíceps; excelente para conectar la espalda.'},
+      machine:['Polea alta con barra recta o cuerda.','De pie frente a la polea, un paso atrás.'],
+      start:['De pie, pies al ancho de caderas, rodillas algo flexionadas.','Inclínate algo al frente desde la cadera, espalda recta.','Brazos casi extendidos arriba, codo con ligera flexión FIJA.'],
+      exec:['Con los brazos casi rectos, empuja la barra abajo en arco hasta los muslos.','<b>Bajada:</b> exhala, lleva la barra a los muslos usando el dorsal.','<b>Regreso:</b> inhala, sube controlado sintiendo el estiramiento.','El codo mantiene el MISMO ángulo todo el tiempo.'],
+      breath:{in:'Al subir', out:'Al bajar'},
+      errors:['Doblar y estirar los codos (lo vuelve extensión de tríceps).','Arquear la espalda baja.','Demasiado peso y perder el arco.'],
+      tips:['Mantén el ángulo del codo "congelado": solo se mueve el hombro.','Siente el estiramiento y contracción del dorsal en el costado.'],
+      safety:['Detente si sientes el hombro o la lumbar.']},
+    {n:'+', name:'Curl con Mancuernas (Bíceps)', meta:'4× 12 a 15 · mancuernas',
+      muscles:{main:'Bíceps braquial', sec:'Braquial anterior, antebrazo', benefit:'Fortalece y tonifica la parte frontal del brazo.'},
+      start:['De pie o sentada, pies al ancho de caderas.','Mancuernas a los lados, palmas al frente o neutras.','Codos pegados al costado, hombros abajo, espalda recta.'],
+      exec:['Flexiona los codos subiendo hacia los hombros.','<b>Subida:</b> exhala, contrae el bíceps con los codos quietos.','<b>Bajada:</b> inhala, baja lento hasta casi extender del todo.'],
+      breath:{in:'Al bajar', out:'Al subir'},
+      errors:['Balancear el cuerpo / impulso.','Mover los codos adelante.','Rango incompleto abajo.','Subir los hombros.'],
+      tips:['Codos como bisagras fijas al costado.','Aprieta arriba, baja MUY lento (ahí se gana más).'],
+      safety:['Detente ante dolor agudo en el codo (tendón).']},
+    {n:'+', name:'Abdominal Bicicleta', meta:'3× 8 a 10 · suelo',
+      muscles:{main:'Recto abdominal y oblicuos', sec:'Flexores de cadera', benefit:'Trabaja oblicuos y abdomen de forma dinámica.'},
+      start:['Boca arriba, lumbar pegada al suelo.','Manos detrás de la cabeza sin tirar del cuello, codos abiertos.','Piernas elevadas, rodillas a 90°.'],
+      exec:['Lleva un codo a la rodilla contraria mientras estiras la otra pierna, alternando como pedaleando.','Gira desde el torso, no desde el cuello.','Ritmo controlado, no rápido.'],
+      breath:{in:'Rítmica', out:'En cada giro'},
+      errors:['Tirar del cuello.','Ir muy rápido sin control.','Despegar la lumbar.'],
+      tips:['Lentitud > velocidad.','Codos abiertos para no tirar del cuello.'],
+      safety:['Detente si sientes el cuello o la lumbar.']},
+    {n:'+', name:'Crunch Abdominal con Pulso', meta:'3× 8 a 10 · suelo',
+      muscles:{main:'Recto abdominal', sec:'Oblicuos', benefit:'Pequeñas pulsaciones que aumentan el tiempo bajo tensión.'},
+      start:['Boca arriba, rodillas flexionadas, pies en el suelo.','Manos en el pecho o tras la cabeza sin tirar.','Lumbar pegada al suelo.'],
+      exec:['Eleva el tronco encorvando (crunch), costillas hacia la cadera.','En la posición alta, pequeños pulsos cortos manteniendo la contracción.','Regresa controlado.'],
+      breath:{in:'Sin aguantar aire', out:'En cada pulso (cortas)'},
+      errors:['Tirar del cuello.','Despegar la lumbar.','Mover desde la cadera.'],
+      tips:['Barbilla a un puño de distancia del pecho.','Concentra la quemazón en el abdomen.'],
+      safety:['Detente si sientes el cuello.']},
+    {n:'+', name:'Plancha Abdominal Apoyo en Codos', meta:'3× 12 a 15 · isométrico',
+      muscles:{main:'Core completo (recto, transverso, oblicuos)', sec:'Hombros, glúteos, espalda', benefit:'Isométrico que fortalece el core de forma funcional y protege la espalda.'},
+      start:['Sobre antebrazos y puntas de los pies.','Codos bajo los hombros.','Cuerpo en línea recta de cabeza a talones.','Abdomen y glúteo apretados, mirada al suelo.'],
+      exec:['Sostén la tabla en línea recta.','Aprieta el abdomen (como si fueras a recibir un golpe) y el glúteo.','Respira continuo, no aguantes el aire.','Empieza con 20-30s y sube.'],
+      breath:{in:'Continua', out:'Continua y controlada'},
+      errors:['Hundir la cadera (arquea la lumbar — el más común).','Subir la cadera en "pico".','Dejar caer la cabeza.','Aguantar la respiración.'],
+      tips:['Si la cadera se hunde, aprieta más glúteo/abdomen o acorta el tiempo.','Calidad > duración: 20s perfectos > 60s con cadera caída.'],
+      safety:['Detente cuando la cadera caiga: no sigas con mala forma.']}
+  ],
+  d: [
+    {n:'C', name:'Cardio – Caminadora', meta:'10 min · calentamiento',
+      muscles:{main:'Sistema cardiovascular', sec:'Piernas (ligero)', benefit:'Calentamiento antes de piernas.'},
+      exec:['Ritmo activo, inclinación ligera para activar glúteo.'],
+      breath:{in:'Natural', out:'Rítmica'},
+      errors:['Saltarlo en día de piernas.'],
+      tips:['Calienta rodillas y cadera.'],
+      safety:['Sin riesgo a ritmo moderado.']},
+    {n:'60', name:'Sentadilla en Smith', meta:'3× 8 a 10 · máquina Smith',
+      muscles:{main:'Cuádriceps y glúteo mayor', sec:'Isquiotibiales, core', benefit:'La barra guiada da estabilidad, ideal para aprender el patrón. Construye fuerza y masa.'},
+      machine:['<b>Barra:</b> ganchos a la altura de la mitad del pecho.','<b>Topes de seguridad:</b> justo bajo tu punto más bajo de sentadilla.','La barra va sobre el trapecio, no sobre el cuello.'],
+      start:['Barra sobre el trapecio, manos a los lados.','Pies algo adelantados respecto a la barra, al ancho de hombros.','Espalda recta, pecho arriba, abdomen activo, mirada al frente.'],
+      exec:['Gira la barra para destrabarla.','<b>Bajada:</b> inhala, baja llevando la cadera atrás hasta muslos paralelos (o donde controles).','<b>Subida:</b> exhala, empuja por los talones hasta extender sin bloquear.','Ritmo: 2-3s bajar, 1-2s subir.'],
+      breath:{in:'Al bajar', out:'Al subir'},
+      errors:['Rodillas hacia adentro.','Levantar los talones.','Redondear la espalda baja.','Pies bajo la barra (rodillas muy adelante).'],
+      tips:['Pies adelantados activan más el glúteo.','Empuja con los talones.','Piensa "sentarte en una silla atrás".'],
+      safety:['Riesgo: rodilla y lumbar.','USA los topes de seguridad.','Detente si la espalda se redondea o las rodillas se colapsan.']},
+    {n:'02', name:'Extensión de Pierna', meta:'3× 12 a 15 · máquina',
+      muscles:{main:'Cuádriceps (aislamiento)', sec:'—', benefit:'Aísla y da forma al cuádriceps. Complemento, no ejercicio principal.'},
+      machine:['<b>Respaldo:</b> la parte de atrás de la rodilla justo al borde del asiento (eje alineado con la rodilla).','<b>Rodillo:</b> sobre la parte baja de la espinilla, encima del empeine.','<b>Error:</b> rodillo muy alto o eje desalineado cargan la rodilla.'],
+      start:['Sentada, espalda apoyada, glúteo al fondo.','Rodillas alineadas con el eje.','Rodillo sobre los tobillos, manos en los agarres.'],
+      exec:['Extiende las rodillas levantando el rodillo.','<b>Extensión:</b> exhala, estira casi recto sin golpe, apretando el cuádriceps.','<b>Regreso:</b> inhala, baja lento.','Ritmo: 1-2s subir, 2-3s bajar.'],
+      breath:{in:'Al bajar', out:'Al extender'},
+      errors:['Impulso (balancear).','Soltar de golpe.','Bloquear la rodilla con golpe brusco.'],
+      tips:['Pausa medio segundo arriba apretando el cuádriceps.','Si tienes molestias de rodilla, controla el rango y peso.'],
+      safety:['Riesgo: rodilla (tensión directa). Empieza ligero.','Detente ante dolor (no quemazón) en la rodilla.']},
+    {n:'03', name:'Máquina de Femoral (sentada)', meta:'3× 8 a 10 · máquina',
+      muscles:{main:'Isquiotibiales (femoral)', sec:'Gemelos', benefit:'Equilibra el cuádriceps y protege la rodilla.'},
+      machine:['<b>Respaldo:</b> rodilla alineada con el eje.','<b>Almohadilla del muslo:</b> bájala sobre los muslos para fijarlos.','<b>Rodillo:</b> sobre la parte baja de la pantorrilla / detrás del talón.'],
+      start:['Sentada, espalda apoyada.','Muslos fijados bajo la almohadilla.','Piernas extendidas, rodillo tras las pantorrillas.'],
+      exec:['Flexiona las rodillas llevando el rodillo abajo/atrás (talones hacia el asiento).','<b>Flexión:</b> exhala, curva hasta tu rango.','<b>Regreso:</b> inhala, vuelve lento sin extender de golpe.'],
+      breath:{in:'Al volver', out:'Al flexionar'},
+      errors:['Despegar la espalda del respaldo.','Impulso.','Rango incompleto.'],
+      tips:['Aprieta el femoral al final de la flexión.','Siente la parte de atrás del muslo.'],
+      safety:['Detente ante calambre fuerte o molestia en la rodilla.']},
+    {n:'+', name:'Elevación de Cadera / Hip Thrust', meta:'3× 8 a 10 · banco o máquina',
+      muscles:{main:'Glúteo mayor', sec:'Isquiotibiales, core', benefit:'El mejor ejercicio para glúteo. Repasa el detalle completo en el Día B.'},
+      machine:['Almohadilla sobre el hueso de la cadera, no el abdomen.','Espalda alta apoyada en respaldo o banco.'],
+      start:['Espalda alta apoyada, pies al ancho de caderas.','Talones bajo las rodillas, barbilla algo metida.'],
+      exec:['Empuja por los talones a extensión completa de cadera.','<b>Subida:</b> exhala, aprieta fuerte el glúteo arriba con pausa.','<b>Bajada:</b> inhala, baja lento.','Mete las costillas para no arquear la lumbar.'],
+      breath:{in:'Al bajar', out:'Al subir'},
+      errors:['Hiperextender la lumbar.','Talones mal posicionados.','Mirar hacia atrás.'],
+      tips:['Pausa 1-2s arriba apretando.','"Aprieto glúteos para subir", no "arqueo la espalda".'],
+      safety:['Riesgo: lumbar si hiperextiendes.','Detente si sientes la espalda baja.']},
+    {n:'+', name:'Adductor / Aductora (cierre de piernas)', meta:'3× 8 a 10 · máquina',
+      muscles:{main:'Aductores (cara interna del muslo)', sec:'Estabilizadores de cadera', benefit:'Equilibra el abductor y da forma completa a la pierna.'},
+      machine:['Misma máquina que el abductor pero con las almohadillas en la cara INTERNA (piernas empiezan abiertas).','Regula la apertura inicial: sin tirón excesivo en la ingle.','Espalda apoyada.'],
+      start:['Sentada, espalda apoyada.','Piernas abiertas, almohadillas en la cara interna de muslos/rodillas.','Apertura inicial cómoda.'],
+      exec:['Cierra las piernas juntando las rodillas contra la resistencia.','<b>Cierre:</b> exhala, junta controlado.','<b>Apertura:</b> inhala, abre lento resistiendo, sin estiramiento doloroso.'],
+      breath:{in:'Al abrir', out:'Al cerrar'},
+      errors:['Empezar muy abierta (tirón de ingle).','Soltar de golpe al abrir.','Impulso.'],
+      tips:['Aprieta los aductores al cerrar.','Controla MUCHO la fase de apertura (la más vulnerable).'],
+      safety:['Riesgo: tirón de ingle.','Empieza con poco peso y rango moderado.','Detente ante tirón agudo en la ingle.']}
+  ]
+};
+
+// ---------- RENDER ----------
+function buildSection(title, items, cls='') {
+  if (!items || !items.length) return '';
+  let li = items.map(i => `<li>${i}</li>`).join('');
+  return `<div class="sec ${cls}"><div class="sec-title"><span class="dot"></span>${title}</div><ul>${li}</ul></div>`;
+}
+
+function buildExercise(ex) {
+  let html = '';
+  // Músculos
+  html += `<div class="sec"><div class="sec-title"><span class="dot"></span>Músculos trabajados</div>
+    <p><b>Principal:</b> ${ex.muscles.main}</p>
+    <p><b>Secundarios:</b> ${ex.muscles.sec}</p>
+    <p><b>Beneficio:</b> ${ex.muscles.benefit}</p></div>`;
+  if (ex.machine) html += buildSection('Ajuste de la máquina', ex.machine);
+  if (ex.start) html += buildSection('Posición inicial', ex.start);
+  if (ex.exec) html += buildSection('Ejecución paso a paso', ex.exec);
+  if (ex.breath) html += `<div class="sec"><div class="sec-title"><span class="dot"></span>Respiración</div>
+    <div class="breath"><div><div class="lbl">Inhala</div>${ex.breath.in}</div><div><div class="lbl">Exhala</div>${ex.breath.out}</div></div>
+    <p style="margin-top:8px;font-size:13px;color:var(--muted);">Mantén el abdomen ligeramente apretado todo el tiempo.</p></div>`;
+  if (ex.errors) html += buildSection('Errores comunes', ex.errors, 'danger');
+  if (ex.tips) html += buildSection('Consejos avanzados', ex.tips, 'tip');
+  if (ex.safety) html += buildSection('Seguridad', ex.safety, 'danger');
+  return html;
+}
+
+['a','b','c','d'].forEach(day => {
+  const container = document.getElementById('list-'+day);
+  data[day].forEach(ex => {
+    const card = document.createElement('div');
+    card.className = 'ex';
+    card.innerHTML = `
+      <div class="ex-head">
+        <div class="ex-num">${ex.n}</div>
+        <div class="ex-info">
+          <div class="ex-name">${ex.name}${ex.dup ? '<span class="dup-flag">duplicado</span>' : ''}</div>
+          <div class="ex-meta">${ex.meta}</div>
+        </div>
+        <div class="ex-arrow">›</div>
+      </div>
+      <div class="ex-body"><div class="ex-body-inner">${buildExercise(ex)}</div></div>`;
+    const head = card.querySelector('.ex-head');
+    const body = card.querySelector('.ex-body');
+    head.addEventListener('click', () => {
+      const isOpen = card.classList.contains('open');
+      if (isOpen) {
+        card.classList.remove('open');
+        body.style.maxHeight = '0';
+      } else {
+        card.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+    container.appendChild(card);
+  });
+});
+
+// ---------- TABS ----------
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+});
+</script>
+</body>
+</html>
